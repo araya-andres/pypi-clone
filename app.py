@@ -1,25 +1,21 @@
 import flask
 
-from infrastructure.view_modifiers import response
-
 app = flask.Flask(__name__)
 
 
-def get_latest_packages():
-    return [
-        {"name": "flask", "version": "1.2.3"},
-        {"name": "sqlalchemy", "version": "2.2.0"},
-        {"name": "passlib", "version": "3.0.0"},
-    ]
+def main():
+    register_blueprints()
+    app.run()
 
 
-@app.route("/")
-@response(template_file="home/index.html")
-def index():
-    return {"packages": get_latest_packages()}
+def register_blueprints():
+    from views import home_views, package_views
+
+    app.register_blueprint(home_views.blueprint)
+    app.register_blueprint(package_views.blueprint)
 
 
-@app.route("/about")
-@response(template_file="home/about.html")
-def about():
-    return {}
+if __name__ == "__main__":
+    main()
+else:
+    register_blueprints()
